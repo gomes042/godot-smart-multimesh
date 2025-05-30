@@ -1,0 +1,34 @@
+Checks: >
+  modernize-use-override,
+  readability-*,
+  performance-*,
+  modernize-use-nullptr,
+  -modernize-use-auto,
+  modernize-deprecated-headers,
+  modernize-use-bool-literals,
+  bugprone-*,
+  -bugprone-unhandled-self-assignment,
+  misc-misplaced-widening-cast,
+  misc-unused-parameters,
+  clang-analyzer-*,
+  readability-identifier-naming,
+  -readability-magic-numbers,
+  -bugprone-easily-swappable-parameters,
+  -readability-braces-around-statements,
+  -readability-isolate-declaration,
+  -readability-identifier-length,
+  -readability-uppercase-literal-suffix,
+  -readability-else-after-return,
+  -llvm-header-guard
+
+CheckOptions:
+  - key: readability-identifier-length.MinimumParameterNameLength
+    value: 0
+  - key: readability-identifier-naming.PrivateMemberCase
+    value: lower_case
+  - key: readability-identifier-naming.FunctionCase
+    value: lower_case
+
+WarningsAsErrors: modernize-use-override
+HeaderFilterRegex: '^(?!.*[/\\].[/\\](include)[/\\]).*'
+FormatStyle: none
