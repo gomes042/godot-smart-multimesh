@@ -1,0 +1,14 @@
+version: "3"
+
+tasks:
+  build-debug-gdextension:
+    desc: Build DEBUG GDExtension with SCons
+    dir: .
+    cmd: scons target=template_debug use_hot_reload=true
+    silent: false
+
+  build-release-gdextension:
+    desc: Build RELEASE GDExtension with SCons
+    dir: .
+    cmd: scons target=template_release
+    silent: false

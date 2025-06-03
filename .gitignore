@@ -1,2 +1,9 @@
-build/*
-include/*
+build/
+include/
+.cache/
+.sconsign.dblite
+
+*.obj
+*.o
+
+compile_commands.json
