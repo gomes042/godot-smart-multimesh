@@ -1,0 +1,14 @@
+[configuration]
+
+entry_symbol = "smart_multimesh_library_init"
+compatibility_minimum = "4.1"
+reloadable = true
+
+[libraries]
+
+windows.debug.x86_64 = "res://addons/smart-multimesh/bin/windows/x86_64/debug/libsmm.windows.debug.x86_64.dll"
+windows.release.x86_64 = "res://addons/smart-multimesh/bin/windows/x86_64/release/libsmm.windows.release.x86_64.dll"
+
+[icons]
+
+SmartMultiMeshInstance3D = "res://addons/smart-multimesh/SmartMultiMeshInstance3D.svg"

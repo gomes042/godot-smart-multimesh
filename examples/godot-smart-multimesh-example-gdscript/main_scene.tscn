@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://dsp23wwuum3vj"]
+
+[sub_resource type="Environment" id="Environment_o3jxj"]
+background_mode = 1
+background_color = Color(0.0666667, 0.156863, 0.215686, 1)
+
+[node name="MainScene" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_o3jxj")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+
+[node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="."]
+
+[node name="SmartMultiMeshInstance3D" type="SmartMultiMeshInstance3D" parent="."]

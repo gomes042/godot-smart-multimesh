@@ -36,6 +36,7 @@ def get_unique_dirs(files):
 # ========== VARIABLE PARSING ==========
 
 opts = Variables()
+opts.Add("target", "Build target (e.g., template_debug or template_release)", "template_release")
 opts.Add(BoolVariable("compiledb", "Generate compile_commands.json", True))
 
 localEnv = Environment(tools=["default"], PLATFORM="")
@@ -43,15 +44,25 @@ opts.Update(localEnv)
 Help(opts.GenerateHelpText(localEnv))
 
 # Determine target/debug early
-target = localEnv.get("target", "")
+target = localEnv["target"]
 is_debug = target == "template_debug"
 
 env = localEnv.Clone()
 env["compiledb"] = True if is_debug else localEnv.get("compiledb", False)
 
+# Force debug-related flags explicitly
+env["target"] = target
+env["debug_symbols"] = is_debug
+env["optimize"] = not is_debug
+env["production"] = not is_debug
+env["use_lto"] = False
+
+print(f"### DEBUG: target={target}, is_debug={is_debug}")
+print(f"### DEBUG: debug_symbols={env['debug_symbols']}, optimize={env['optimize']}")
+
 # ========== ENABLE SCONS CACHE ==========
 if "SCONS_CACHE_DIR" in os.environ:
-    CacheDir(os.environ["SCONS_CACHE_DIR"]) # type: ignore
+    CacheDir(os.environ["SCONS_CACHE_DIR"])  # type: ignore
 
 # ========== LOAD GODOT ENVIRONMENT ==========
 env = SConscript("include/godot-cpp/SConstruct", {"env": env})
@@ -64,6 +75,10 @@ if host_platform.system().lower() == "linux":
         "-fexceptions",
         "-fPIC",
     ])
+    if is_debug:
+        env.Append(CCFLAGS=["-g"])
+    else:
+        env.Append(CCFLAGS=["-O2"])
 
 env.Append(CPPDEFINES="SMM_DEBUG" if is_debug else "SMM_RELEASE")
 
@@ -80,7 +95,7 @@ build_type = "debug" if is_debug else "release"
 output_name = f"lib{libname}.{platform_name}.{build_type}.{architecture}"
 
 output_path = os.path.join(
-    "build", platform_name, architecture, build_type,
+    "addons/smart-multimesh/bin", platform_name, architecture, build_type,
     f"{output_name}{env['SHLIBSUFFIX']}"
 )
 

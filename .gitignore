@@ -1,4 +1,8 @@
-build/
+addons/smart-multimesh/bin
+addons/smart-multimesh/*.uid
+addons/smart-multimesh/*.import
+examples/**/addons/smart-multimesh
+
 include/
 .cache/
 .sconsign.dblite
