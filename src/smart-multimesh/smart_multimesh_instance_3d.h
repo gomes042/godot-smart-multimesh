@@ -7,113 +7,16 @@
 #include "godot_cpp/classes/object.hpp"
 #include "godot_cpp/classes/random_number_generator.hpp"
 #include "godot_cpp/classes/rendering_server.hpp"
-#include "godot_cpp/classes/resource.hpp"
 #include "godot_cpp/classes/world3d.hpp"
 #include "godot_cpp/core/class_db.hpp"
 #include "godot_cpp/variant/transform3d.hpp"
 #include "godot_cpp/variant/typed_array.hpp"
-#include "godot_cpp/variant/utility_functions.hpp"
+
+#include "resources/smart_multimesh_container_3d.h"
 
 #include <vector>
 
 using namespace godot;
-
-class SmartMultiMeshContainer3D : public Resource {
-	GDCLASS(SmartMultiMeshContainer3D, Resource);
-
-	Ref<Mesh> mesh;
-	int instance_count = 0;
-
-	bool use_indirect = false;
-	godot::RenderingServer::MultimeshTransformFormat transform_format = RenderingServer::MULTIMESH_TRANSFORM_3D;
-	bool use_colors = false;
-	bool use_custom_data = false;
-
-protected:
-	static void _bind_methods() {
-		ClassDB::bind_method(D_METHOD("set_mesh", "mesh"), &SmartMultiMeshContainer3D::set_mesh);
-		ClassDB::bind_method(D_METHOD("get_mesh"), &SmartMultiMeshContainer3D::get_mesh);
-
-		ClassDB::bind_method(D_METHOD("set_instance_count", "count"), &SmartMultiMeshContainer3D::set_instance_count);
-		ClassDB::bind_method(D_METHOD("get_instance_count"), &SmartMultiMeshContainer3D::get_instance_count);
-
-		ClassDB::bind_method(D_METHOD("set_use_indirect", "enabled"), &SmartMultiMeshContainer3D::set_use_indirect);
-		ClassDB::bind_method(D_METHOD("get_use_indirect"), &SmartMultiMeshContainer3D::get_use_indirect);
-
-		ClassDB::bind_method(D_METHOD("set_transform_format", "format"), &SmartMultiMeshContainer3D::set_transform_format);
-		ClassDB::bind_method(D_METHOD("get_transform_format"), &SmartMultiMeshContainer3D::get_transform_format);
-
-		ClassDB::bind_method(D_METHOD("set_use_colors", "enabled"), &SmartMultiMeshContainer3D::set_use_colors);
-		ClassDB::bind_method(D_METHOD("get_use_colors"), &SmartMultiMeshContainer3D::get_use_colors);
-
-		ClassDB::bind_method(D_METHOD("set_use_custom_data", "enabled"), &SmartMultiMeshContainer3D::set_use_custom_data);
-		ClassDB::bind_method(D_METHOD("get_use_custom_data"), &SmartMultiMeshContainer3D::get_use_custom_data);
-
-		ADD_PROPERTY(PropertyInfo(Variant::INT, "instance_count", PROPERTY_HINT_RANGE, "0,100000000,1"),
-				"set_instance_count", "get_instance_count");
-		ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "mesh", PROPERTY_HINT_RESOURCE_TYPE, "Mesh"), "set_mesh", "get_mesh");
-
-		ADD_PROPERTY(PropertyInfo(Variant::BOOL, "use_indirect"), "set_use_indirect", "get_use_indirect");
-
-		ADD_PROPERTY(PropertyInfo(Variant::INT, "transform_format", PROPERTY_HINT_ENUM, "2D,3D", PROPERTY_USAGE_INTERNAL),
-				"set_transform_format", "get_transform_format");
-
-		ADD_PROPERTY(PropertyInfo(Variant::BOOL, "use_colors"), "set_use_colors", "get_use_colors");
-		ADD_PROPERTY(PropertyInfo(Variant::BOOL, "use_custom_data"), "set_use_custom_data", "get_use_custom_data");
-
-		ADD_SIGNAL(MethodInfo("property_changed"));
-	}
-
-public:
-	void _get_property_list(List<PropertyInfo> *p_list) const {
-		if (!use_indirect) {
-			p_list->push_back(PropertyInfo(Variant::INT, "transform_format", PROPERTY_HINT_ENUM, "2D,3D"));
-		}
-	}
-
-	// Mesh
-	void set_mesh(const Ref<Mesh> &p_mesh) {
-		mesh = p_mesh;
-		emit_signal("property_changed");
-	}
-	Ref<Mesh> get_mesh() const { return mesh; }
-
-	// Instance Count
-	void set_instance_count(int count) {
-		instance_count = count;
-		emit_signal("property_changed");
-	}
-	int get_instance_count() const { return instance_count; }
-
-	// Use Indirect
-	void set_use_indirect(bool p_use_indirect) {
-		use_indirect = p_use_indirect;
-		emit_signal("property_changed");
-		notify_property_list_changed();
-	}
-	bool get_use_indirect() const { return use_indirect; }
-
-	// Transform Format
-	void set_transform_format(godot::RenderingServer::MultimeshTransformFormat p_format) {
-		transform_format = p_format;
-		emit_signal("property_changed");
-	}
-	godot::RenderingServer::MultimeshTransformFormat get_transform_format() const { return transform_format; }
-
-	// Use Colors
-	void set_use_colors(bool p_use_colors) {
-		use_colors = p_use_colors;
-		emit_signal("property_changed");
-	}
-	bool get_use_colors() const { return use_colors; }
-
-	// Use Custom Data
-	void set_use_custom_data(bool p_use_custom_data) {
-		use_custom_data = p_use_custom_data;
-		emit_signal("property_changed");
-	}
-	bool get_use_custom_data() const { return use_custom_data; }
-};
 
 class SmartMultiMeshInstance3D : public Node3D {
 	GDCLASS(SmartMultiMeshInstance3D, Node3D);
@@ -122,6 +25,18 @@ protected:
 	static void _bind_methods() {
 		ClassDB::bind_method(D_METHOD("set_containers", "containers"), &SmartMultiMeshInstance3D::set_containers);
 		ClassDB::bind_method(D_METHOD("get_containers"), &SmartMultiMeshInstance3D::get_containers);
+
+		ClassDB::bind_method(D_METHOD("get_internal_total_multimeshes_count"), &SmartMultiMeshInstance3D::get_internal_total_multimeshes_count);
+		ClassDB::bind_method(D_METHOD("get_total_meshes_count"), &SmartMultiMeshInstance3D::get_total_meshes_count);
+
+		ClassDB::bind_method(D_METHOD("get_container_index"), &SmartMultiMeshInstance3D::get_container_index);
+
+		ADD_PROPERTY(
+				PropertyInfo(Variant::STRING, "total_meshes", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_READ_ONLY),
+				"", "get_total_meshes_count");
+		ADD_PROPERTY(
+				PropertyInfo(Variant::STRING, "internal_multimeshes", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_READ_ONLY),
+				"", "get_internal_total_multimeshes_count");
 
 		ADD_PROPERTY(
 				PropertyInfo(Variant::ARRAY, "containers", PROPERTY_HINT_ARRAY_TYPE, "SmartMultiMeshContainer3D"),
@@ -138,20 +53,26 @@ private:
 public:
 	void set_containers(const TypedArray<SmartMultiMeshContainer3D> &p_containers) {
 		// Disconnect from old containers
+		/* 	for (int i = 0; i < containers.size(); i++) {
+				Ref<SmartMultiMeshContainer3D> container = containers[i];
+				if (container.is_valid()) {
+					Object *obj = Object::cast_to<Object>(*container);
+					if (obj && obj->is_connected("property_changed", callable_mp(this, &SmartMultiMeshInstance3D::recreate_multimeshes_from_containers))) {
+						obj->disconnect("property_changed", callable_mp(this, &SmartMultiMeshInstance3D::recreate_multimeshes_from_containers));
+					}
+				}
+			} */
+
+		containers = p_containers;
 		for (int i = 0; i < containers.size(); i++) {
 			Ref<SmartMultiMeshContainer3D> container = containers[i];
 			if (container.is_valid()) {
-				Object *obj = Object::cast_to<Object>(*container);
-				if (obj && obj->is_connected("property_changed", callable_mp(this, &SmartMultiMeshInstance3D::recreate_multimeshes_from_containers))) {
-					obj->disconnect("property_changed", callable_mp(this, &SmartMultiMeshInstance3D::recreate_multimeshes_from_containers));
-				}
+				container->set_instance(this);
 			}
 		}
 
-		containers = p_containers;
-
 		// Connect to new containers
-		for (int i = 0; i < containers.size(); i++) {
+		/* for (int i = 0; i < containers.size(); i++) {
 			Ref<SmartMultiMeshContainer3D> container = containers[i];
 			if (container.is_valid()) {
 				Object *obj = Object::cast_to<Object>(*container);
@@ -159,22 +80,27 @@ public:
 					obj->connect("property_changed", callable_mp(this, &SmartMultiMeshInstance3D::recreate_multimeshes_from_containers));
 				}
 			}
-		}
+		} */
 
 		// Optional: Delay execution in editor mode
-		if (!Engine::get_singleton()->is_editor_hint()) {
-			recreate_multimeshes_from_containers();
-		} else {
-			call_deferred("recreate_multimeshes_from_containers"); // Delay until safe
-		}
+		// if (!Engine::get_singleton()->is_editor_hint()) {
+		// 	recreate_multimeshes_from_containers();
+		// } else {
+		// 	call_deferred("recreate_multimeshes_from_containers"); // Delay until safe
+		// }
 	}
 
 	TypedArray<SmartMultiMeshContainer3D> get_containers() const {
 		return containers;
 	}
 
-	int get_interna_multimeshes_count() const {
+	int get_internal_total_multimeshes_count() const {
 		return static_cast<int>(multimeshes.size());
+	}
+
+	// TODO: Implement
+	int get_total_meshes_count() {
+		return 0;
 	}
 
 	void recreate_multimeshes_from_containers() {
@@ -227,7 +153,7 @@ public:
 						rng->randf_range(-10.0, 10.0));
 				Transform3D xform;
 				xform.origin = pos;
-				rs->multimesh_instance_set_transform(mm_rid, j, xform);
+				//rs->multimesh_instance_set_transform(mm_rid, j, xform);
 			}
 
 			RID instance_rid = rs->instance_create();
@@ -250,6 +176,11 @@ public:
 		this->notify_property_list_changed();
 
 		recreate_multimeshes_from_containers();
+
+		// call gdscript init
+		if (has_method("init")) {
+			call("init");
+		}
 	}
 
 	void _exit_tree() override {
@@ -265,4 +196,14 @@ public:
 		}
 		multimeshes.clear();
 	}
+
+	int get_container_index(SmartMultiMeshContainer3D *container) const { return static_cast<int>(containers.find(container)); }
+
+	void set_instance_transform_by_container_and_instance_index(int container_index, int instance_index, const Transform3D &transform) {
+		RID multimesh_index = multimeshes[container_index];
+		RenderingServer *rs = RenderingServer::get_singleton();
+		rs->multimesh_instance_set_transform(multimesh_index, instance_index, transform);
+	}
+
+	//void set_instance_transform(SmartMultiMeshContainer3D *container, int instance_index, const Transform3D &transform);
 };

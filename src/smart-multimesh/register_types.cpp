@@ -1,16 +1,19 @@
 #include "./register_types.h"
 
 #include "godot_cpp/core/class_db.hpp"
-#include "smart_multimesh_instance_3d.h"
-
 #include <godot_cpp/variant/utility_functions.hpp>
+
+#include "resources/smart_multimesh_container_3d.h"
+#include "smart_multimesh_instance_3d.h"
 
 void smart_multimesh_initialize_module(ModuleInitializationLevel p_level) {
 	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
 		return;
 	}
 
+	// Resources
 	GDREGISTER_CLASS(SmartMultiMeshContainer3D)
+
 	GDREGISTER_CLASS(SmartMultiMeshInstance3D)
 
 	godot::UtilityFunctions::print("SmartMultiMesh: Library initialized.");

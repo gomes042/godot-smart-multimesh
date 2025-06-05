@@ -9,5 +9,6 @@ include/
 
 *.obj
 *.o
+*.tmp
 
 compile_commands.json
