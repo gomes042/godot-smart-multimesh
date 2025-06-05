@@ -1,9 +1,17 @@
-@tool
 extends SmartMultiMeshInstance3D
 
 func init() -> void:
 	print("init() GDSCRIPT")
 	
+	var container_spacing_x: float = 10.0  # Distance between containers (X)
+	var wrap_height: int = 50  # Max number of instances before wrapping to next column (Y limit)
+	
+	# Spacing between instances in X and Y
+	var gap_x: float = 2.0
+	var gap_y: float = 2.0
+
+	var container_offset_x: float = 0.0  # Tracks where to start each container on the X-axis
+
 	for container in containers:
 		print(" ")
 
@@ -12,15 +20,21 @@ func init() -> void:
 		print("Container Index (container.get_index): ", container.get_index())
 		print("Instances in Container: ", container.instance_count)
 		
-		var space_x := float((container_index) * 3)
-		
 		for s in range(container.instance_count):
-			var x := space_x + float(container_index * 10 + s)  # Spread containers along X, instances add spacing
-			var y := float(container_index * 2 + s % 2)  # Some variation in Y using container and instance
-			var pos := Vector3(x, y, 1.0)
-			
+			var column: int = s / wrap_height  # Which column inside this container
+			var row: int = s % wrap_height     # Which row (Y)
+
+			var x: float = container_offset_x + float(column) * gap_x
+			var y: float = float(row) * gap_y
+
+			var pos: Vector3 = Vector3(x, y, 1.0)
 			container.set_instance_transform(s, Transform3D(Basis.IDENTITY, pos))
-			#print("instance: ", s, " position: ", pos)
+		
+		# Move container offset X to the right for the next container,
+		# considering how many columns were used
+		var num_columns: int = ceil(float(container.instance_count) / float(wrap_height))
+		container_offset_x += float(num_columns) * gap_x + container_spacing_x
+		#print("instance: ", s, " position: ", pos)
 		
 		#container.for_every_instance(func(instance_index):
 		#	print("Processing instance ", instance_index)
