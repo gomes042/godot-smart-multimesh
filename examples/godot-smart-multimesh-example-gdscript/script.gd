@@ -28,7 +28,7 @@ func init() -> void:
 			var y: float = float(row) * gap_y
 
 			var pos: Vector3 = Vector3(x, y, 1.0)
-			container.set_instance_transform(s, Transform3D(Basis.IDENTITY, pos))
+			#container.set_instance_transform(s, Transform3D(Basis.IDENTITY, pos))
 		
 		# Move container offset X to the right for the next container,
 		# considering how many columns were used

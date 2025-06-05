@@ -59,9 +59,6 @@ protected:
 		ADD_PROPERTY(PropertyInfo(Variant::BOOL, "use_colors"), "set_use_colors", "get_use_colors");
 		ADD_PROPERTY(PropertyInfo(Variant::BOOL, "use_custom_data"), "set_use_custom_data", "get_use_custom_data");
 
-		// SIGNALS
-		ADD_SIGNAL(MethodInfo("property_changed"));
-
 		// METHODS
 		ClassDB::bind_method(D_METHOD("get_index"), &SmartMultiMeshContainer3D::get_index);
 		ClassDB::bind_method(D_METHOD("set_instance_transform", "instance_index", "transform"), &SmartMultiMeshContainer3D::set_instance_transform);
@@ -81,46 +78,27 @@ public:
 	}
 
 	// Mesh
-	void set_mesh(const Ref<Mesh> &p_mesh) {
-		mesh = p_mesh;
-		emit_signal("property_changed");
-	}
+	void set_mesh(const Ref<Mesh> &p_mesh);
 	Ref<Mesh> get_mesh() const { return mesh; }
 
 	// Instance Count
-	void set_instance_count(int count) {
-		instance_count = count;
-		emit_signal("property_changed");
-	}
+	void set_instance_count(int count);
 	int get_instance_count() const { return instance_count; }
 
 	// Use Indirect
-	void set_use_indirect(bool p_use_indirect) {
-		use_indirect = p_use_indirect;
-		emit_signal("property_changed");
-		notify_property_list_changed();
-	}
+	void set_use_indirect(bool p_use_indirect);
 	bool get_use_indirect() const { return use_indirect; }
 
 	// Transform Format
-	void set_transform_format(godot::RenderingServer::MultimeshTransformFormat p_format) {
-		transform_format = p_format;
-		emit_signal("property_changed");
-	}
+	void set_transform_format(godot::RenderingServer::MultimeshTransformFormat p_format);
 	godot::RenderingServer::MultimeshTransformFormat get_transform_format() const { return transform_format; }
 
 	// Use Colors
-	void set_use_colors(bool p_use_colors) {
-		use_colors = p_use_colors;
-		emit_signal("property_changed");
-	}
+	void set_use_colors(bool p_use_colors);
 	bool get_use_colors() const { return use_colors; }
 
 	// Use Custom Data
-	void set_use_custom_data(bool p_use_custom_data) {
-		use_custom_data = p_use_custom_data;
-		emit_signal("property_changed");
-	}
+	void set_use_custom_data(bool p_use_custom_data);
 	bool get_use_custom_data() const { return use_custom_data; }
 
 	/* void for_every_instance(const Callable &callback) const {
@@ -134,4 +112,5 @@ public:
 	int get_index() const;
 
 	void set_instance_transform(int instance_index, const Transform3D &transform);
+	void set_instance_color(int instance_index, const Color &color);
 };

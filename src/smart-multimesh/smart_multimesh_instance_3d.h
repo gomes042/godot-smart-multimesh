@@ -52,17 +52,6 @@ private:
 
 public:
 	void set_containers(const TypedArray<SmartMultiMeshContainer3D> &p_containers) {
-		// Disconnect from old containers
-		/* 	for (int i = 0; i < containers.size(); i++) {
-				Ref<SmartMultiMeshContainer3D> container = containers[i];
-				if (container.is_valid()) {
-					Object *obj = Object::cast_to<Object>(*container);
-					if (obj && obj->is_connected("property_changed", callable_mp(this, &SmartMultiMeshInstance3D::recreate_multimeshes_from_containers))) {
-						obj->disconnect("property_changed", callable_mp(this, &SmartMultiMeshInstance3D::recreate_multimeshes_from_containers));
-					}
-				}
-			} */
-
 		containers = p_containers;
 		for (int i = 0; i < containers.size(); i++) {
 			Ref<SmartMultiMeshContainer3D> container = containers[i];
@@ -70,24 +59,6 @@ public:
 				container->set_instance(this);
 			}
 		}
-
-		// Connect to new containers
-		/* for (int i = 0; i < containers.size(); i++) {
-			Ref<SmartMultiMeshContainer3D> container = containers[i];
-			if (container.is_valid()) {
-				Object *obj = Object::cast_to<Object>(*container);
-				if (obj && !obj->is_connected("property_changed", callable_mp(this, &SmartMultiMeshInstance3D::recreate_multimeshes_from_containers))) {
-					obj->connect("property_changed", callable_mp(this, &SmartMultiMeshInstance3D::recreate_multimeshes_from_containers));
-				}
-			}
-		} */
-
-		// Optional: Delay execution in editor mode
-		// if (!Engine::get_singleton()->is_editor_hint()) {
-		// 	recreate_multimeshes_from_containers();
-		// } else {
-		// 	call_deferred("recreate_multimeshes_from_containers"); // Delay until safe
-		// }
 	}
 
 	TypedArray<SmartMultiMeshContainer3D> get_containers() const {
@@ -98,26 +69,36 @@ public:
 		return static_cast<int>(multimeshes.size());
 	}
 
-	// TODO: Implement
 	int get_total_meshes_count() {
-		return 0;
+		int total_count = 0;
+
+		for (int i = 0; i < containers.size(); i++) {
+			SmartMultiMeshContainer3D *container = Object::cast_to<SmartMultiMeshContainer3D>(containers[i]);
+
+			if (container == nullptr)
+				continue;
+
+			total_count += container->get_instance_count();
+		}
+		return total_count;
 	}
 
 	void recreate_multimeshes_from_containers() {
-		if (!is_inside_tree()) {
-			// Prevent crashes if node isn't fully in scene tree yet
-			return;
-		}
+		// if (!is_inside_tree()) {
+		// 	return;
+		// }
 
 		RenderingServer *rs = RenderingServer::get_singleton();
 
 		for (const RID &instance : instances) {
-			rs->free_rid(instance);
+			if (instance.is_valid())
+				rs->free_rid(instance);
 		}
 		instances.clear();
 
 		for (const RID &mm : multimeshes) {
-			rs->free_rid(mm);
+			if (mm.is_valid())
+				rs->free_rid(mm);
 		}
 		multimeshes.clear();
 
@@ -136,14 +117,13 @@ public:
 			SmartMultiMeshContainer3D *container = Object::cast_to<SmartMultiMeshContainer3D>(containers[i]);
 
 			Ref<Mesh> raw_mesh = container->get_mesh();
-			if (raw_mesh == nullptr) {
-				ERR_PRINT("Invalid mesh at index " + String::num(i));
+			if (raw_mesh == nullptr || raw_mesh.is_null()) {
 				continue;
 			}
 
 			RID mm_rid = rs->multimesh_create();
 			rs->multimesh_set_mesh(mm_rid, raw_mesh->get_rid());
-			rs->multimesh_allocate_data(mm_rid, container->get_instance_count(), RenderingServer::MULTIMESH_TRANSFORM_3D);
+			rs->multimesh_allocate_data(mm_rid, container->get_instance_count(), RenderingServer::MULTIMESH_TRANSFORM_3D, container->use_colors);
 			rs->multimesh_set_visible_instances(mm_rid, container->get_instance_count());
 
 			for (int j = 0; j < container->get_instance_count(); j++) {
@@ -153,7 +133,7 @@ public:
 						rng->randf_range(-10.0, 10.0));
 				Transform3D xform;
 				xform.origin = pos;
-				//rs->multimesh_instance_set_transform(mm_rid, j, xform);
+				rs->multimesh_instance_set_transform(mm_rid, j, xform);
 			}
 
 			RID instance_rid = rs->instance_create();
@@ -187,12 +167,14 @@ public:
 		RenderingServer *rs = RenderingServer::get_singleton();
 
 		for (const RID &instance : instances) {
-			rs->free_rid(instance);
+			if (instance.is_valid())
+				rs->free_rid(instance);
 		}
 		instances.clear();
 
 		for (const RID &mm : multimeshes) {
-			rs->free_rid(mm);
+			if (mm.is_valid())
+				rs->free_rid(mm);
 		}
 		multimeshes.clear();
 	}
@@ -203,6 +185,12 @@ public:
 		RID multimesh_index = multimeshes[container_index];
 		RenderingServer *rs = RenderingServer::get_singleton();
 		rs->multimesh_instance_set_transform(multimesh_index, instance_index, transform);
+	}
+
+	void set_instance_color_by_container_and_instance_index(int container_index, int instance_index, const Color &color) {
+		RID multimesh_index = multimeshes[container_index];
+		RenderingServer *rs = RenderingServer::get_singleton();
+		rs->multimesh_instance_set_color(multimesh_index, instance_index, color);
 	}
 
 	//void set_instance_transform(SmartMultiMeshContainer3D *container, int instance_index, const Transform3D &transform);

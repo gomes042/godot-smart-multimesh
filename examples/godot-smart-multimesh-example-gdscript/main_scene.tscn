@@ -11,7 +11,7 @@ albedo_color = Color(0.0313726, 0.0823529, 1, 1)
 material = SubResource("StandardMaterial3D_0f027")
 
 [sub_resource type="SmartMultiMeshContainer3D" id="SmartMultiMeshContainer3D_o3jxj"]
-instance_count = 3000
+instance_count = 30
 mesh = SubResource("BoxMesh_o3jxj")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o3jxj"]
@@ -21,7 +21,7 @@ albedo_color = Color(1, 0, 1, 1)
 material = SubResource("StandardMaterial3D_o3jxj")
 
 [sub_resource type="SmartMultiMeshContainer3D" id="SmartMultiMeshContainer3D_0f027"]
-instance_count = 2000
+instance_count = 30
 mesh = SubResource("PrismMesh_o3jxj")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2c62f"]
@@ -31,7 +31,7 @@ albedo_color = Color(0.054902, 0.796078, 0.380392, 1)
 material = SubResource("StandardMaterial3D_2c62f")
 
 [sub_resource type="SmartMultiMeshContainer3D" id="SmartMultiMeshContainer3D_2c62f"]
-instance_count = 600
+instance_count = 30
 mesh = SubResource("CapsuleMesh_0f027")
 
 [sub_resource type="Environment" id="Environment_o3jxj"]
@@ -42,13 +42,14 @@ background_energy_multiplier = 4.87
 [node name="MainScene" type="Node3D"]
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.997599, -0.012029, 0.0681986, 0.0115776, 0.999908, 0.00701039, -0.0682767, -0.00620398, 0.997647, 139.49, 51.8121, 98.7837)
+transform = Transform3D(0.997599, -0.012029, 0.0681986, 0.0115776, 0.999908, 0.00701039, -0.0682767, -0.00620398, 0.997647, 1.53429, 1.14735, 25.0377)
 current = true
 
 [node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="."]
 multimesh = SubResource("MultiMesh_o3jxj")
 
 [node name="SmartMultiMeshInstance3D" type="SmartMultiMeshInstance3D" parent="."]
+total_meshes = 90
 internal_multimeshes = 3
 containers = Array[SmartMultiMeshContainer3D]([SubResource("SmartMultiMeshContainer3D_o3jxj"), SubResource("SmartMultiMeshContainer3D_0f027"), SubResource("SmartMultiMeshContainer3D_2c62f")])
 script = ExtResource("1_0f027")
