@@ -1,4 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://dsp23wwuum3vj"]
+[gd_scene load_steps=10 format=3 uid="uid://dsp23wwuum3vj"]
+
+[ext_resource type="Script" uid="uid://bpeuogwlbwb1h" path="res://script.gd" id="1_0f027"]
 
 [sub_resource type="MultiMesh" id="MultiMesh_o3jxj"]
 
@@ -9,7 +11,7 @@ albedo_color = Color(0.0313726, 0.0823529, 1, 1)
 material = SubResource("StandardMaterial3D_0f027")
 
 [sub_resource type="SmartMultiMeshContainer3D" id="SmartMultiMeshContainer3D_o3jxj"]
-instance_count = 1225
+instance_count = 10
 mesh = SubResource("BoxMesh_o3jxj")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o3jxj"]
@@ -19,7 +21,7 @@ albedo_color = Color(1, 0, 1, 1)
 material = SubResource("StandardMaterial3D_o3jxj")
 
 [sub_resource type="SmartMultiMeshContainer3D" id="SmartMultiMeshContainer3D_0f027"]
-instance_count = 1670
+instance_count = 10
 mesh = SubResource("PrismMesh_o3jxj")
 
 [sub_resource type="Environment" id="Environment_o3jxj"]
@@ -30,14 +32,16 @@ background_energy_multiplier = 4.87
 [node name="MainScene" type="Node3D"]
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.889759, 0.45643, 0, -0.45643, 0.889759, 0, 9.66306, 20.7911)
+transform = Transform3D(1, 0, 0, 0, 0.984799, 0.1737, 0, -0.1737, 0.984799, 9.72336, 4.20518, 14.3615)
 current = true
 
 [node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="."]
 multimesh = SubResource("MultiMesh_o3jxj")
 
 [node name="SmartMultiMeshInstance3D" type="SmartMultiMeshInstance3D" parent="."]
+internal_multimeshes = 2
 containers = Array[SmartMultiMeshContainer3D]([SubResource("SmartMultiMeshContainer3D_o3jxj"), SubResource("SmartMultiMeshContainer3D_0f027")])
+script = ExtResource("1_0f027")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_o3jxj")
