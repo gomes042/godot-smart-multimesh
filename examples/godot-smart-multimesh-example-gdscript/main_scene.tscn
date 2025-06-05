@@ -1,16 +1,43 @@
-[gd_scene load_steps=2 format=3 uid="uid://dsp23wwuum3vj"]
+[gd_scene load_steps=9 format=3 uid="uid://dsp23wwuum3vj"]
+
+[sub_resource type="MultiMesh" id="MultiMesh_o3jxj"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0f027"]
+albedo_color = Color(0.0313726, 0.0823529, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_o3jxj"]
+material = SubResource("StandardMaterial3D_0f027")
+
+[sub_resource type="SmartMultiMeshContainer3D" id="SmartMultiMeshContainer3D_o3jxj"]
+instance_count = 1225
+mesh = SubResource("BoxMesh_o3jxj")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o3jxj"]
+albedo_color = Color(1, 0, 1, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_o3jxj"]
+material = SubResource("StandardMaterial3D_o3jxj")
+
+[sub_resource type="SmartMultiMeshContainer3D" id="SmartMultiMeshContainer3D_0f027"]
+instance_count = 1670
+mesh = SubResource("PrismMesh_o3jxj")
 
 [sub_resource type="Environment" id="Environment_o3jxj"]
 background_mode = 1
-background_color = Color(0.0666667, 0.156863, 0.215686, 1)
+background_color = Color(0.127756, 0.147997, 0.217568, 1)
+background_energy_multiplier = 4.87
 
 [node name="MainScene" type="Node3D"]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_o3jxj")
-
 [node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.889759, 0.45643, 0, -0.45643, 0.889759, 0, 9.66306, 20.7911)
+current = true
 
 [node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="."]
+multimesh = SubResource("MultiMesh_o3jxj")
 
 [node name="SmartMultiMeshInstance3D" type="SmartMultiMeshInstance3D" parent="."]
+containers = Array[SmartMultiMeshContainer3D]([SubResource("SmartMultiMeshContainer3D_o3jxj"), SubResource("SmartMultiMeshContainer3D_0f027")])
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_o3jxj")
