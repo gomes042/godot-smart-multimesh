@@ -125,7 +125,7 @@ private:
 		Ref<SmartMultiMeshContainer3D> container = Object::cast_to<SmartMultiMeshContainer3D>(containers[container_index]);
 
 		if (!has_multimesh_for_container_and_instance_index(container_index, container->instance_count)) {
-			recreate_all_multimeshes_and_rs_instances_from_containers();
+			recreate_multimeshes_and_rs_instances_for_container(container_index);
 		} else {
 			for (const auto &amm : get_multimeshes_associated_with_container(container_index)) {
 				RID mm_rid = amm.first;
@@ -138,7 +138,63 @@ private:
 		}
 	}
 
-	void recreate_all_multimeshes_and_rs_instances_from_containers() {
+	void recreate_multimeshes_and_rs_instances_for_container(int container_index) {
+		SmartMultiMeshContainer3D *container = Object::cast_to<SmartMultiMeshContainer3D>(containers[container_index]);
+
+		RID scenario_rid = get_world_3d()->get_scenario();
+		RenderingServer *rs = RenderingServer::get_singleton();
+
+		for (const auto &m : get_multimeshes_associated_with_container(container_index)) {
+			RID mm_rid = m.first;
+			rs->free_rid(mm_rid);
+			multimeshes.erase(m.first);
+		}
+
+		if (container == nullptr) {
+			return;
+		}
+
+		Ref<Mesh> raw_mesh = container->get_mesh();
+		if (raw_mesh == nullptr || raw_mesh.is_null()) {
+			return;
+		}
+
+		int total_instances = container->get_instance_count();
+		int num_multimeshes = (total_instances + MAX_MESHES_PER_MULTIMESH - 1) / MAX_MESHES_PER_MULTIMESH;
+
+		for (int mesh_index = 0; mesh_index < num_multimeshes; mesh_index++) {
+			int remaining_instances = total_instances - (mesh_index * MAX_MESHES_PER_MULTIMESH);
+			int instance_count = MIN(remaining_instances, MAX_MESHES_PER_MULTIMESH);
+
+			RID mm_rid = rs->multimesh_create();
+			rs->multimesh_set_mesh(mm_rid, raw_mesh->get_rid());
+			rs->multimesh_allocate_data(mm_rid, instance_count, RenderingServer::MULTIMESH_TRANSFORM_3D, container->use_colors);
+			rs->multimesh_set_visible_instances(mm_rid, instance_count);
+
+			// for (int j = 0; j < container->get_instance_count(); j++) {
+			// 	Vector3 pos(
+			// 			rng->randf_range(-10.0, 10.0),
+			// 			rng->randf_range(-10.0, 10.0),
+			// 			rng->randf_range(-10.0, 10.0));
+			// 	Transform3D xform;
+			// 	xform.origin = pos;
+			// 	//rs->multimesh_instance_set_transform(mm_rid, j, xform);
+			// }
+
+			RID instance_rid = rs->instance_create();
+			rs->instance_set_base(instance_rid, mm_rid);
+			rs->instance_set_scenario(instance_rid, scenario_rid);
+			rs->instance_set_transform(instance_rid, get_global_transform());
+			rs->instance_set_visible(instance_rid, true);
+			rs->instance_geometry_set_cast_shadows_setting(instance_rid, RenderingServer::SHADOW_CASTING_SETTING_ON);
+
+			// This RID is now mapped to the container index
+			multimeshes[mm_rid] = container_index;
+			rs_instances.push_back(instance_rid);
+		}
+	}
+
+	void recreate_multimeshes_and_rs_instances_for_all_containers() {
 		// if (!is_inside_tree()) {
 		// 	return;
 		// }
@@ -162,57 +218,12 @@ private:
 			return;
 		}
 
-		RID scenario_rid = get_world_3d()->get_scenario();
-
 		// Ref<RandomNumberGenerator> rng;
 		// rng.instantiate();
 		// rng->randomize();
 
 		for (int container_index = 0; container_index < containers.size(); container_index++) {
-			SmartMultiMeshContainer3D *container = Object::cast_to<SmartMultiMeshContainer3D>(containers[container_index]);
-
-			if (container == nullptr) {
-				continue;
-			}
-
-			Ref<Mesh> raw_mesh = container->get_mesh();
-			if (raw_mesh == nullptr || raw_mesh.is_null()) {
-				continue;
-			}
-
-			int total_instances = container->get_instance_count();
-			int num_multimeshes = (total_instances + MAX_MESHES_PER_MULTIMESH - 1) / MAX_MESHES_PER_MULTIMESH;
-
-			for (int mesh_index = 0; mesh_index < num_multimeshes; mesh_index++) {
-				int remaining_instances = total_instances - (mesh_index * MAX_MESHES_PER_MULTIMESH);
-				int instance_count = MIN(remaining_instances, MAX_MESHES_PER_MULTIMESH);
-
-				RID mm_rid = rs->multimesh_create();
-				rs->multimesh_set_mesh(mm_rid, raw_mesh->get_rid());
-				rs->multimesh_allocate_data(mm_rid, instance_count, RenderingServer::MULTIMESH_TRANSFORM_3D, container->use_colors);
-				rs->multimesh_set_visible_instances(mm_rid, instance_count);
-
-				// for (int j = 0; j < container->get_instance_count(); j++) {
-				// 	Vector3 pos(
-				// 			rng->randf_range(-10.0, 10.0),
-				// 			rng->randf_range(-10.0, 10.0),
-				// 			rng->randf_range(-10.0, 10.0));
-				// 	Transform3D xform;
-				// 	xform.origin = pos;
-				// 	//rs->multimesh_instance_set_transform(mm_rid, j, xform);
-				// }
-
-				RID instance_rid = rs->instance_create();
-				rs->instance_set_base(instance_rid, mm_rid);
-				rs->instance_set_scenario(instance_rid, scenario_rid);
-				rs->instance_set_transform(instance_rid, get_global_transform());
-				rs->instance_set_visible(instance_rid, true);
-				rs->instance_geometry_set_cast_shadows_setting(instance_rid, RenderingServer::SHADOW_CASTING_SETTING_ON);
-
-				// This RID is now mapped to the container index
-				multimeshes[mm_rid] = container_index;
-				rs_instances.push_back(instance_rid);
-			}
+			recreate_multimeshes_and_rs_instances_for_container(container_index);
 		}
 	}
 
@@ -258,7 +269,7 @@ public:
 
 		this->notify_property_list_changed();
 
-		recreate_all_multimeshes_and_rs_instances_from_containers();
+		recreate_multimeshes_and_rs_instances_for_all_containers();
 
 		// call gdscript init
 		if (has_method("init")) {
