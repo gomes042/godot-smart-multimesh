@@ -19,7 +19,7 @@ void SmartMultiMeshContainer3D::set_mesh(const Ref<Mesh> &p_mesh) {
 	if (sm_instance == nullptr)
 		return;
 
-	sm_instance->recreate_multimeshes_from_containers();
+	sm_instance->mesh_changed_in_container(get_index());
 }
 
 void SmartMultiMeshContainer3D::set_instance_count(int count) {
@@ -27,7 +27,8 @@ void SmartMultiMeshContainer3D::set_instance_count(int count) {
 
 	if (sm_instance == nullptr)
 		return;
-	sm_instance->recreate_multimeshes_from_containers();
+
+	sm_instance->instance_count_changed_in_container(get_index());
 }
 
 void SmartMultiMeshContainer3D::set_use_indirect(bool p_use_indirect) {
@@ -37,7 +38,8 @@ void SmartMultiMeshContainer3D::set_use_indirect(bool p_use_indirect) {
 
 	if (sm_instance == nullptr)
 		return;
-	sm_instance->recreate_multimeshes_from_containers();
+
+	//...
 }
 
 void SmartMultiMeshContainer3D::set_transform_format(godot::RenderingServer::MultimeshTransformFormat p_format) {
@@ -45,7 +47,8 @@ void SmartMultiMeshContainer3D::set_transform_format(godot::RenderingServer::Mul
 
 	if (sm_instance == nullptr)
 		return;
-	sm_instance->recreate_multimeshes_from_containers();
+
+	//...
 }
 
 void SmartMultiMeshContainer3D::set_use_colors(bool p_use_colors) {
@@ -53,7 +56,8 @@ void SmartMultiMeshContainer3D::set_use_colors(bool p_use_colors) {
 
 	if (sm_instance == nullptr)
 		return;
-	sm_instance->recreate_multimeshes_from_containers();
+
+	//...
 }
 
 void SmartMultiMeshContainer3D::set_use_custom_data(bool p_use_custom_data) {
@@ -61,5 +65,6 @@ void SmartMultiMeshContainer3D::set_use_custom_data(bool p_use_custom_data) {
 
 	if (sm_instance == nullptr)
 		return;
-	sm_instance->recreate_multimeshes_from_containers();
+
+	//...
 }

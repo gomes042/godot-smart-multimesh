@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://dsp23wwuum3vj"]
+[gd_scene load_steps=16 format=3 uid="uid://dsp23wwuum3vj"]
 
 [ext_resource type="Script" uid="uid://bpeuogwlbwb1h" path="res://script.gd" id="1_0f027"]
 
@@ -11,7 +11,6 @@ albedo_color = Color(0.0313726, 0.0823529, 1, 1)
 material = SubResource("StandardMaterial3D_0f027")
 
 [sub_resource type="SmartMultiMeshContainer3D" id="SmartMultiMeshContainer3D_o3jxj"]
-instance_count = 30
 mesh = SubResource("BoxMesh_o3jxj")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o3jxj"]
@@ -21,7 +20,6 @@ albedo_color = Color(1, 0, 1, 1)
 material = SubResource("StandardMaterial3D_o3jxj")
 
 [sub_resource type="SmartMultiMeshContainer3D" id="SmartMultiMeshContainer3D_0f027"]
-instance_count = 30
 mesh = SubResource("PrismMesh_o3jxj")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2c62f"]
@@ -31,7 +29,6 @@ albedo_color = Color(0.054902, 0.796078, 0.380392, 1)
 material = SubResource("StandardMaterial3D_2c62f")
 
 [sub_resource type="SmartMultiMeshContainer3D" id="SmartMultiMeshContainer3D_2c62f"]
-instance_count = 30
 mesh = SubResource("CapsuleMesh_0f027")
 
 [sub_resource type="Environment" id="Environment_o3jxj"]
@@ -39,20 +36,207 @@ background_mode = 1
 background_color = Color(0.127756, 0.147997, 0.217568, 1)
 background_energy_multiplier = 4.87
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0f027"]
+bg_color = Color(0, 0.633932, 0.963048, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2c62f"]
+bg_color = Color(0.362667, 0, 0.64, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gyfs4"]
+bg_color = Color(0, 0.56, 0.0839999, 1)
+
 [node name="MainScene" type="Node3D"]
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.997599, -0.012029, 0.0681986, 0.0115776, 0.999908, 0.00701039, -0.0682767, -0.00620398, 0.997647, 1.53429, 1.14735, 25.0377)
+transform = Transform3D(0.997599, -0.012029, 0.0681986, 0.0115776, 0.999908, 0.00701039, -0.0682767, -0.00620398, 0.997647, 130.785, 46.7429, 125.687)
 current = true
 
 [node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="."]
 multimesh = SubResource("MultiMesh_o3jxj")
 
 [node name="SmartMultiMeshInstance3D" type="SmartMultiMeshInstance3D" parent="."]
-total_meshes = 90
-internal_multimeshes = 3
 containers = Array[SmartMultiMeshContainer3D]([SubResource("SmartMultiMeshContainer3D_o3jxj"), SubResource("SmartMultiMeshContainer3D_0f027"), SubResource("SmartMultiMeshContainer3D_2c62f")])
 script = ExtResource("1_0f027")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_o3jxj")
+
+[node name="Container" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Container"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -190.5
+offset_top = -66.0
+offset_right = 190.5
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Container/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ButtonCubeAdd" type="Button" parent="Container/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/hover = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/normal = SubResource("StyleBoxFlat_0f027")
+text = " Add Cube (+100) "
+
+[node name="ButtonPrismAdd" type="Button" parent="Container/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/hover = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/normal = SubResource("StyleBoxFlat_2c62f")
+text = " Add Prism (+100) "
+
+[node name="ButtonCapsuleAdd" type="Button" parent="Container/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/normal = SubResource("StyleBoxFlat_gyfs4")
+text = " Add Capsule (+100) "
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Container/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ButtonCubeAdd" type="Button" parent="Container/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/hover = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/normal = SubResource("StyleBoxFlat_0f027")
+text = " Add Cube (+10) "
+
+[node name="ButtonPrismAdd" type="Button" parent="Container/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/hover = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/normal = SubResource("StyleBoxFlat_2c62f")
+text = " Add Prism (+10) "
+
+[node name="ButtonCapsuleAdd" type="Button" parent="Container/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/normal = SubResource("StyleBoxFlat_gyfs4")
+text = " Add Capsule (+10) "
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Container/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ButtonCubeRemove" type="Button" parent="Container/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/hover = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_0f027")
+theme_override_styles/normal = SubResource("StyleBoxFlat_0f027")
+text = " Remove Cube (-10) "
+
+[node name="ButtonPrismRemove" type="Button" parent="Container/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/hover = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_2c62f")
+theme_override_styles/normal = SubResource("StyleBoxFlat_2c62f")
+text = " Remove Prism (-10) "
+
+[node name="ButtonCapsuleRemove" type="Button" parent="Container/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxFlat_gyfs4")
+theme_override_styles/normal = SubResource("StyleBoxFlat_gyfs4")
+text = " Remove Capsule (-10) "
+
+[connection signal="pressed" from="Container/VBoxContainer/HBoxContainer3/ButtonCubeAdd" to="SmartMultiMeshInstance3D" method="_on_button_cube_add_pressed" binds= [100]]
+[connection signal="pressed" from="Container/VBoxContainer/HBoxContainer3/ButtonPrismAdd" to="SmartMultiMeshInstance3D" method="_on_button_prism_add_pressed" binds= [100]]
+[connection signal="pressed" from="Container/VBoxContainer/HBoxContainer3/ButtonCapsuleAdd" to="SmartMultiMeshInstance3D" method="_on_button_capsule_add_pressed" binds= [100]]
+[connection signal="pressed" from="Container/VBoxContainer/HBoxContainer/ButtonCubeAdd" to="SmartMultiMeshInstance3D" method="_on_button_cube_add_pressed" binds= [10]]
+[connection signal="pressed" from="Container/VBoxContainer/HBoxContainer/ButtonPrismAdd" to="SmartMultiMeshInstance3D" method="_on_button_prism_add_pressed" binds= [10]]
+[connection signal="pressed" from="Container/VBoxContainer/HBoxContainer/ButtonCapsuleAdd" to="SmartMultiMeshInstance3D" method="_on_button_capsule_add_pressed" binds= [10]]
+[connection signal="pressed" from="Container/VBoxContainer/HBoxContainer2/ButtonCubeRemove" to="SmartMultiMeshInstance3D" method="_on_button_cube_remove_pressed"]
+[connection signal="pressed" from="Container/VBoxContainer/HBoxContainer2/ButtonPrismRemove" to="SmartMultiMeshInstance3D" method="_on_button_prism_remove_pressed"]
+[connection signal="pressed" from="Container/VBoxContainer/HBoxContainer2/ButtonCapsuleRemove" to="SmartMultiMeshInstance3D" method="_on_button_capsule_remove_pressed"]

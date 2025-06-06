@@ -28,7 +28,7 @@ func init() -> void:
 			var y: float = float(row) * gap_y
 
 			var pos: Vector3 = Vector3(x, y, 1.0)
-			#container.set_instance_transform(s, Transform3D(Basis.IDENTITY, pos))
+			container.set_instance_transform(s, Transform3D(Basis.IDENTITY, pos))
 		
 		# Move container offset X to the right for the next container,
 		# considering how many columns were used
@@ -39,3 +39,31 @@ func init() -> void:
 		#container.for_every_instance(func(instance_index):
 		#	print("Processing instance ", instance_index)
 		#)
+
+
+func _on_button_cube_add_pressed(q=1) -> void:
+	containers[0].instance_count += q;
+	init() #TODO: replace this line
+
+func _on_button_prism_add_pressed(q=1) -> void:
+	containers[1].instance_count += q;
+	init() #TODO: replace this line
+
+func _on_button_capsule_add_pressed(q=1) -> void:
+	containers[2].instance_count += q;
+	init() #TODO: replace this line
+
+func _on_button_cube_remove_pressed() -> void:
+	if containers[0].instance_count == 0: return
+	containers[0].instance_count -= 10;
+	init() #TODO: replace this line
+
+func _on_button_prism_remove_pressed() -> void:
+	if containers[1].instance_count == 0: return
+	containers[1].instance_count -= 10;
+	init() #TODO: replace this line
+
+func _on_button_capsule_remove_pressed() -> void:
+	if containers[2].instance_count == 0: return
+	containers[2].instance_count -= 10;
+	init() #TODO: replace this line
