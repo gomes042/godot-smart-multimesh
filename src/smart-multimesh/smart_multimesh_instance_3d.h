@@ -126,6 +126,12 @@ private:
 
 		if (container->instance_count == 0) {
 			godot::UtilityFunctions::print("SmartMultiMeshInstance3D::instance_count_changed_in_container: Container index " + String::num_int64(container_index) + " has no instances");
+			for (const auto &amm : get_multimeshes_associated_with_container(container_index)) {
+				RID mm_rid = amm.first;
+
+				RenderingServer *rs = RenderingServer::get_singleton();
+				rs->multimesh_set_visible_instances(mm_rid, 0);
+			}
 			return;
 		}
 
