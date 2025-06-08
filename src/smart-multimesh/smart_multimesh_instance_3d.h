@@ -124,6 +124,11 @@ private:
 
 		Ref<SmartMultiMeshContainer3D> container = Object::cast_to<SmartMultiMeshContainer3D>(containers[container_index]);
 
+		if (container->instance_count == 0) {
+			godot::UtilityFunctions::print("SmartMultiMeshInstance3D::instance_count_changed_in_container: Container index " + String::num_int64(container_index) + " has no instances");
+			return;
+		}
+
 		if (!has_multimesh_for_container_and_instance_index(container_index, container->instance_count)) {
 			recreate_multimeshes_and_rs_instances_for_container(container_index);
 		} else {
@@ -201,17 +206,17 @@ private:
 
 		RenderingServer *rs = RenderingServer::get_singleton();
 
-		for (const RID &instance : rs_instances) {
-			if (instance.is_valid())
-				rs->free_rid(instance);
-		}
-		rs_instances.clear();
-
 		for (const auto &mm : multimeshes) {
 			if (mm.first.is_valid())
 				rs->free_rid(mm.first);
 		}
 		multimeshes.clear();
+
+		for (const RID &instance : rs_instances) {
+			if (instance.is_valid())
+				rs->free_rid(instance);
+		}
+		rs_instances.clear();
 
 		if (containers.size() == 0) {
 			//ERR_PRINT("No containers");
@@ -280,17 +285,17 @@ public:
 	void _exit_tree() override {
 		RenderingServer *rs = RenderingServer::get_singleton();
 
-		for (const RID &instance : rs_instances) {
-			if (instance.is_valid())
-				rs->free_rid(instance);
-		}
-		rs_instances.clear();
-
 		for (const auto &mm : multimeshes) {
 			if (mm.first.is_valid())
 				rs->free_rid(mm.first);
 		}
 		multimeshes.clear();
+
+		for (const RID &instance : rs_instances) {
+			if (instance.is_valid())
+				rs->free_rid(instance);
+		}
+		rs_instances.clear();
 	}
 
 	int get_container_index(SmartMultiMeshContainer3D *container) const { return static_cast<int>(containers.find(container)); }
