@@ -112,5 +112,8 @@ public:
 	int get_index() const;
 
 	void set_instance_transform(int instance_index, const Transform3D &transform);
+	Transform3D get_instance_transform(int instance_index) const;
+
 	void set_instance_color(int instance_index, const Color &color);
+	Color get_instance_color(int instance_index);
 };

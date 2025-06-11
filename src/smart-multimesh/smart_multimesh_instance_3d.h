@@ -318,6 +318,18 @@ public:
 		rs->multimesh_instance_set_color(multimesh, local_index, color);
 	}
 
+	Color get_instance_color_by_container_and_instance_index(int container_index, int instance_index) {
+		RID multimesh = get_multimesh_by_container_and_instance_index(container_index, instance_index);
+
+		if (!multimesh.is_valid())
+			return Color(0, 0, 0);
+
+		RenderingServer *rs = RenderingServer::get_singleton();
+
+		int local_index = instance_index % MAX_MESHES_PER_MULTIMESH; // <--- convert to local index
+		return rs->multimesh_instance_get_color(multimesh, local_index);
+	}
+
 	void set_instance_transform_by_container_and_instance_index(int container_index, int instance_index, const Transform3D &transform) {
 		RID multimesh = get_multimesh_by_container_and_instance_index(container_index, instance_index);
 
@@ -328,6 +340,18 @@ public:
 
 		int local_index = instance_index % MAX_MESHES_PER_MULTIMESH; // <--- convert to local index
 		rs->multimesh_instance_set_transform(multimesh, local_index, transform);
+	}
+
+	Transform3D get_instance_transform_by_container_and_instance_index(int container_index, int instance_index) {
+		RID multimesh = get_multimesh_by_container_and_instance_index(container_index, instance_index);
+
+		if (!multimesh.is_valid())
+			return Transform3D();
+
+		RenderingServer *rs = RenderingServer::get_singleton();
+
+		int local_index = instance_index % MAX_MESHES_PER_MULTIMESH; // <--- convert to local index
+		return rs->multimesh_instance_get_transform(multimesh, local_index);
 	}
 
 	//void set_instance_transform(SmartMultiMeshContainer3D *container, int instance_index, const Transform3D &transform);

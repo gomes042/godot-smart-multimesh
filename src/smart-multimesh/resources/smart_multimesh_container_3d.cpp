@@ -9,6 +9,14 @@ void SmartMultiMeshContainer3D::set_instance_transform(int instance_index, const
 	sm_instance->set_instance_transform_by_container_and_instance_index(this->get_index(), instance_index, transform);
 }
 
+Transform3D SmartMultiMeshContainer3D::get_instance_transform(int instance_index) const {
+	return sm_instance->get_instance_transform_by_container_and_instance_index(this->get_index(), instance_index);
+}
+
+Color SmartMultiMeshContainer3D::get_instance_color(int instance_index) {
+	return sm_instance->get_instance_color_by_container_and_instance_index(this->get_index(), instance_index);
+}
+
 void SmartMultiMeshContainer3D::set_instance_color(int instance_index, const Color &color) {
 	sm_instance->set_instance_color_by_container_and_instance_index(this->get_index(), instance_index, color);
 }
