@@ -112,7 +112,7 @@ Transform3D SmartMultiMeshInstance3D::get_instance_transform_by_container_and_in
 }
 
 void SmartMultiMeshInstance3D::mesh_changed_in_container(int container_index) {
-	godot::UtilityFunctions::print("SmartMultiMeshInstance3D::mesh_changed_in_container: Container index " + String::num_int64(container_index));
+	//godot::UtilityFunctions::print("SmartMultiMeshInstance3D::mesh_changed_in_container: Container index " + String::num_int64(container_index));
 
 	for (const auto &m : get_multimeshes_associated_with_container(container_index)) {
 		RID mm_rid = m.first;
@@ -124,12 +124,12 @@ void SmartMultiMeshInstance3D::mesh_changed_in_container(int container_index) {
 }
 
 void SmartMultiMeshInstance3D::instance_count_changed_in_container(int container_index) {
-	godot::UtilityFunctions::print("SmartMultiMeshInstance3D::instance_count_changed_in_container: Container index " + String::num_int64(container_index));
+	//godot::UtilityFunctions::print("SmartMultiMeshInstance3D::instance_count_changed_in_container: Container index " + String::num_int64(container_index));
 
 	Ref<SmartMultiMeshContainer3D> container = Object::cast_to<SmartMultiMeshContainer3D>(containers[container_index]);
 
 	if (container->instance_count == 0) {
-		godot::UtilityFunctions::print("SmartMultiMeshInstance3D::instance_count_changed_in_container: Container index " + String::num_int64(container_index) + " has no instances");
+		//godot::UtilityFunctions::print("SmartMultiMeshInstance3D::instance_count_changed_in_container: Container index " + String::num_int64(container_index) + " has no instances");
 		for (const auto &amm : get_multimeshes_associated_with_container(container_index)) {
 			RID mm_rid = amm.first;
 
@@ -197,7 +197,7 @@ void SmartMultiMeshInstance3D::set_containers(const TypedArray<SmartMultiMeshCon
 		}
 	}
 
-	godot::UtilityFunctions::print("SmartMultiMeshInstance3D::set_containers");
+	//godot::UtilityFunctions::print("SmartMultiMeshInstance3D::set_containers");
 }
 
 int SmartMultiMeshInstance3D::get_total_meshes_count() {

@@ -16,7 +16,7 @@ void smart_multimesh_initialize_module(ModuleInitializationLevel p_level) {
 
 	GDREGISTER_CLASS(SmartMultiMeshInstance3D)
 
-	godot::UtilityFunctions::print("SmartMultiMesh: Library initialized.");
+	//godot::UtilityFunctions::print("SmartMultiMesh: Library initialized.");
 }
 
 void smart_multimesh_uninitialize_module(ModuleInitializationLevel p_level) {
@@ -24,7 +24,7 @@ void smart_multimesh_uninitialize_module(ModuleInitializationLevel p_level) {
 		return;
 	}
 
-	godot::UtilityFunctions::print("SmartMultiMesh: Library uninitialized.");
+	//godot::UtilityFunctions::print("SmartMultiMesh: Library uninitialized.");
 }
 
 // Initialization.
